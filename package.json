@@ -1,0 +1,42 @@
+{
+  "name": "coreid",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json -w",
+    "prepublishOnly": "npm run build",
+    "pu": "npm run build && npm publish --access public",
+    "test": "vitest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@testing-library/react": "^16.3.0",
+    "@types/js-cookie": "^3.0.6",
+    "@types/react": "^19.2.2",
+    "@vitest/coverage-c8": "^0.33.0",
+    "jsdom": "^27.0.1",
+    "typescript": "^5.6.3",
+    "vitest": "^4.0.5"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
+  },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
+  }
+}
