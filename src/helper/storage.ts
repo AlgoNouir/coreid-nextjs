@@ -1,3 +1,5 @@
+"use client";
+
 import Cookie from "js-cookie";
 
 export type storagesNames = "cookie" | "local";

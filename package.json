@@ -20,6 +20,7 @@
     "build:watch": "tsc -p tsconfig.json -w",
     "prepublishOnly": "npm run build",
     "pu": "npm run build && npm publish --access public",
+    "link": "npm run build && npm link",
     "test": "vitest"
   },
   "author": "",

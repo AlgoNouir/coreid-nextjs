@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode } from "react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -12,7 +14,7 @@ export default function AuthGuard({
   permits,
   action,
 }: AuthGuardProps) {
-  const { isPermitted: isPermittedHook } = useAuth<string[]>();
+  const { isPermitted: isPermittedHook } = useAuth<string>();
 
   const isPermitted = isPermittedHook(permits);
 
