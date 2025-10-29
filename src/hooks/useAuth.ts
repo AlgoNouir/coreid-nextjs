@@ -2,13 +2,19 @@ import { AuthContext, type AuthContextValueType } from "../helper/context";
 import React from "react";
 
 export function useAuth<T extends string>() {
+  // -------------------------------------------------- context
+
   const ctx = React.useContext(
     AuthContext as React.Context<AuthContextValueType<T> | undefined>
   );
   if (!ctx) throw new Error("useAuth must be used within an AuthContext");
 
-  const { permits: prm } = ctx.userData;
+  // -------------------------------------------------- data
 
+  const { permits: permitsData } = ctx.userData;
+  const prm = (permitsData || []) as T[];
+
+  // -------------------------------------------------- funtions
   const isPermitted = (perm: T | T[]) => {
     if (Array.isArray(perm)) {
       return perm.every((p) => prm.includes(p));
@@ -16,9 +22,9 @@ export function useAuth<T extends string>() {
     return prm.includes(perm);
   };
 
-  const on = (perm: T | T[], callback: () => void, fallback: () => void) => {
+  const on = (perm: T | T[], callback: () => void, fallback?: () => void) => {
     if (isPermitted(perm)) callback();
-    else fallback();
+    else if (fallback) fallback();
   };
 
   const setPermits = (permits: T[]) => {
@@ -26,7 +32,12 @@ export function useAuth<T extends string>() {
   };
 
   const addPermits = (permits: T[]) => {
-    ctx.setUserData({ ...ctx.userData, permits: [...prm, ...permits] });
+    if (typeof permits !== "object") return;
+
+    ctx.setUserData({
+      ...ctx.userData,
+      permits: [...prm.filter((p) => !permits.includes(p)), ...permits],
+    });
   };
 
   const removePermits = (permits: T[]) => {

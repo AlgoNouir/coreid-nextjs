@@ -22,7 +22,5 @@ export default function AuthProvider<T extends string>({
     storage.set("userData", value);
   };
 
-  console.log("Provider-inner", Provider);
-
   return <Provider value={{ userData, setUserData }}>{children}</Provider>;
 }
