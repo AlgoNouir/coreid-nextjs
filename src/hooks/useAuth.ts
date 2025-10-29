@@ -16,11 +16,7 @@ export function useAuth<T extends string>() {
     return prm.includes(perm);
   };
 
-  const on = (
-    perm: T | T[],
-    callback: () => void,
-    fallback: () => void
-  ) => {
+  const on = (perm: T | T[], callback: () => void, fallback: () => void) => {
     if (isPermitted(perm)) callback();
     else fallback();
   };

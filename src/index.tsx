@@ -11,9 +11,7 @@ export interface AuthHookSettings<T extends string> {
   refreshStrategy: "silent"; // یا manual
 }
 
-export default function AuthHook<T extends string>(
-  props: AuthHookSettings<T>
-) {
+export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
   // set storage functions
   let storage = props.storage;
   if (typeof storage === "string") storage = name2storage(storage);
