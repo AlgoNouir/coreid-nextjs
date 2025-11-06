@@ -3,7 +3,8 @@
 import { customeFunc, name2storage, storagesNames } from "./helper/storage";
 import AuthProvider from "./web";
 import { useAuth } from "./hooks/useAuth";
-import axios from "axios"
+import axios from "axios";
+import LoginForm from "./web/login";
 
 export interface AuthHookSettings<T extends string> {
   backendUrl: string;
@@ -18,11 +19,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
   let storage = props.storage;
   if (typeof storage === "string") storage = name2storage(storage);
 
-  // fetch optoins from backend
-  const backend_url = props.backendUrl + "/options"
-  const response = axios.get(backend_url)
-
-// create backend data
+  // create backend data
   return {
     createAuthProvider: (children: React.ReactNode): React.ReactNode => (
       <AuthProvider<T>
@@ -33,7 +30,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
       </AuthProvider>
     ),
     useAuth: () => useAuth<T>(),
-    LoginScenario: () => <p></p>
+    LoginScenario: () => <LoginForm baseURL={props.backendUrl} />,
   };
 }
 
