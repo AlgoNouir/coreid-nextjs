@@ -4,8 +4,8 @@ import Cookie from "js-cookie";
 
 export type storagesNames = "cookie" | "local";
 export type customeFunc = {
-  get: (key: string) => object | undefined;
-  set: (key: string, value: object) => void;
+  get: (key: string) => any | undefined;
+  set: (key: string, value: any) => void;
 };
 export function name2storage(name: storagesNames) {
   const cookie: customeFunc = {

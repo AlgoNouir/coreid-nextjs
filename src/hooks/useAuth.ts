@@ -1,4 +1,9 @@
-import { AuthContext, type AuthContextValueType } from "../helper/context";
+import { AuthHookSettings } from "..";
+import {
+  AuthContext,
+  userBaseData,
+  type AuthContextValueType,
+} from "../helper/context";
 import React from "react";
 
 export function useAuth<T extends string>() {
@@ -13,16 +18,17 @@ export function useAuth<T extends string>() {
 
   const { permits: permitsData } = ctx.userData;
   const prm = (permitsData || []) as T[];
+  const fallback_401_url = ctx.fallback_401_url;
 
   // -------------------------------------------------- funtions
-  const isPermitted = (perm: T | T[]) => {
-    if (Array.isArray(perm)) {
-      return perm.every((p) => prm.includes(p));
-    }
+  const isPermitted = (perm: T) => {
     return prm.includes(perm);
   };
+  const isPermittedAll = (perms: T[]) => {
+    return perms.every((p) => prm.includes(p));
+  };
 
-  const on = (perm: T | T[], callback: () => void, fallback?: () => void) => {
+  const on = (perm: T, callback: () => void, fallback?: () => void) => {
     if (isPermitted(perm)) callback();
     else if (fallback) fallback();
   };
@@ -47,6 +53,10 @@ export function useAuth<T extends string>() {
     });
   };
 
+  const setUserData = (userData: userBaseData<T>) => {
+    ctx.setUserData(userData);
+  };
+
   return {
     permits: prm,
     isPermitted,
@@ -54,5 +64,8 @@ export function useAuth<T extends string>() {
     setPermits,
     addPermits,
     removePermits,
+    setUserData,
+    fallback_401_url,
+    isPermittedAll,
   };
 }
