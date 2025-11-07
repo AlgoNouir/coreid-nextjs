@@ -15,6 +15,8 @@ export default function LoginForm() {
     ScenarioStepsType | undefined
   >();
   const [loading, loadingHandler] = useState(true);
+  const [userID, userIDHandler] = useState("");
+  const [stepPayload, stepPayloadHandler] = useState<any>({});
   const { handleSubmit, control } = useForm();
   const { go_after_login_url, backendUrl, setUserData } = useAuth();
 
@@ -38,7 +40,12 @@ export default function LoginForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
-    const response = await request.post("validate/" + activeStep!.name, data);
+    // valudate step and send data to server
+    const response = await request.post("validate/" + activeStep!.name, {
+      options: data,
+      payload: stepPayload,
+      user_id: userID,
+    });
 
     // if response say go next step
     if (response.status === 202) {
@@ -55,6 +62,8 @@ export default function LoginForm() {
     else if (response.status === 400) {
       activeStepHandler(steps?.[0]);
     }
+    userIDHandler(response.data.user_id);
+    stepPayloadHandler(response.data.payload);
   };
 
   // loading check
