@@ -16,7 +16,7 @@ export default function LoginForm() {
   >();
   const [loading, loadingHandler] = useState(true);
   const { handleSubmit, control } = useForm();
-  const { go_after_login_url, backendUrl } = useAuth();
+  const { go_after_login_url, backendUrl, setUserData } = useAuth();
 
   const request = axios.create({
     baseURL: backendUrl,
@@ -49,6 +49,7 @@ export default function LoginForm() {
     // if response say authenticate is finished
     else if (response.status === 200) {
       window.location.href = go_after_login_url;
+      setUserData(response.data);
     }
     // if response say have a wrong in this request
     else if (response.status === 400) {
