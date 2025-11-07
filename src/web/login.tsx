@@ -25,7 +25,7 @@ export default function LoginForm() {
   // fetch data from steps
   useEffect(() => {
     async function fetchSteps() {
-      const response = await request.get("validate/options");
+      const response = await request.get("options");
       const data = Object.entries(response.data).map(([opt, schema]) => ({
         name: opt,
         structure: convertFromSchema(schema),
@@ -38,7 +38,7 @@ export default function LoginForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
-    const response = await request.post(activeStep!.name, data);
+    const response = await request.post("validate/" + activeStep!.name, data);
 
     // if response say go next step
     if (response.status === 202) {
