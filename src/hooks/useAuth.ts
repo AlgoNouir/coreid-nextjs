@@ -18,7 +18,6 @@ export function useAuth<T extends string>() {
 
   const { permits: permitsData } = ctx.userData;
   const prm = (permitsData || []) as T[];
-  const fallback_401_url = ctx.fallback_401_url;
 
   // -------------------------------------------------- funtions
   const isPermitted = (perm: T) => {
@@ -65,7 +64,7 @@ export function useAuth<T extends string>() {
     addPermits,
     removePermits,
     setUserData,
-    fallback_401_url,
     isPermittedAll,
+    ...ctx.authera_props,
   };
 }

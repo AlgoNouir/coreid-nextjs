@@ -9,28 +9,23 @@ interface ScenarioStepsType {
   name: string;
   structure: structure;
 }
-
-interface LoginFormProps {
-  baseURL: string;
-}
-
-export default function LoginForm({ baseURL }: LoginFormProps) {
+export default function LoginForm() {
   const [steps, stepsHnadler] = useState<ScenarioStepsType[]>();
   const [activeStep, activeStepHandler] = useState<
     ScenarioStepsType | undefined
   >();
   const [loading, loadingHandler] = useState(true);
   const { handleSubmit, control } = useForm();
-  const { fallback_401_url } = useAuth();
+  const { go_after_login_url, backendUrl } = useAuth();
 
   const request = axios.create({
-    baseURL,
+    baseURL: backendUrl,
   });
 
   // fetch data from steps
   useEffect(() => {
     async function fetchSteps() {
-      const response = await request.get("/options");
+      const response = await request.get("validate/options");
       const data = Object.entries(response.data).map(([opt, schema]) => ({
         name: opt,
         structure: convertFromSchema(schema),
@@ -53,7 +48,7 @@ export default function LoginForm({ baseURL }: LoginFormProps) {
     }
     // if response say authenticate is finished
     else if (response.status === 200) {
-      window.location.href = fallback_401_url;
+      window.location.href = go_after_login_url;
     }
     // if response say have a wrong in this request
     else if (response.status === 400) {

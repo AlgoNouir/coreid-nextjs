@@ -1,4 +1,5 @@
 import React from "react";
+import { type AuthHookSettings } from "..";
 
 export type userBaseData<T extends string> = {
   id: string;
@@ -7,7 +8,7 @@ export type userBaseData<T extends string> = {
 };
 
 export interface AuthContextValueType<T extends string> {
-  fallback_401_url: string;
+  authera_props: AuthHookSettings<T>;
   userData: userBaseData<T>;
   setUserData: (value: userBaseData<T>) => void;
 }
