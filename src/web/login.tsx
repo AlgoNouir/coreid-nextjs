@@ -65,6 +65,8 @@ export default function LoginForm({
     }
     // if response say authenticate is finished
     else if (response.status === 200) {
+      console.log("user logined with", response.data.user);
+
       setUserData(response.data.user);
       setPermits(response.data.user.permits);
       if (on_after_login) on_after_login(response.data);
