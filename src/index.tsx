@@ -31,7 +31,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
     LoginScenario: () => (
       <LoginForm
         on_after_login={props.on_after_login}
-        on_after_step={on_after_step}
+        on_after_step={props.on_after_step}
       />
     ),
   };
