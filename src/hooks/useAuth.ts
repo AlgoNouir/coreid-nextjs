@@ -16,7 +16,7 @@ export function useAuth<T extends string>() {
 
   // -------------------------------------------------- data
 
-  const { permits: permitsData } = ctx.userData;
+  const { permits: permitsData, ...user } = ctx.userData;
   const prm = (permitsData || []) as T[];
 
   // -------------------------------------------------- funtions
@@ -65,6 +65,7 @@ export function useAuth<T extends string>() {
     removePermits,
     setUserData,
     isPermittedAll,
+    user,
     ...ctx.authera_props,
   };
 }
