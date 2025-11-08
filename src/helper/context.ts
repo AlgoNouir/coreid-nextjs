@@ -1,5 +1,5 @@
 import React from "react";
-import { type AuthHookSettings } from "..";
+import { type AuthHookSettings } from "./types";
 
 export type userBaseData<T extends string> = {
   id: string;

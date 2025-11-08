@@ -4,16 +4,7 @@ import { customeFunc, name2storage, storagesNames } from "./helper/storage";
 import AuthProvider from "./web";
 import { useAuth } from "./hooks/useAuth";
 import LoginForm from "./web/login";
-
-export interface AuthHookSettings<T extends string> {
-  backendUrl: string;
-  storage: storagesNames | customeFunc;
-  tokenType: "jwt";
-  refreshStrategy: "silent";
-  fallback_401_url: string;
-  on_after_login?: (response_data: any) => void;
-  on_after_step?: (step_key: string) => void;
-}
+import { type AuthHookSettings } from "./helper/types";
 
 export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
   // set storage functions

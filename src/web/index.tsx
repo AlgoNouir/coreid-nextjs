@@ -7,7 +7,7 @@ import {
   userBaseData,
 } from "../helper/context";
 import type { customeFunc as storageFunc } from "../helper/storage";
-import { type AuthHookSettings } from "..";
+import { type AuthHookSettings } from "../helper/types";
 
 interface AuthProviderProps<T extends string> {
   children: React.ReactNode;
