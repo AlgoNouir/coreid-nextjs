@@ -15,7 +15,8 @@ export function useAuth<T extends string>() {
 
   // -------------------------------------------------- data
 
-  const { permits: permitsData, ...user } = ctx.userData;
+  const { permits: permitsData = [], ...user } = (ctx.userData ||
+    ({} as userBaseData<T>)) as userBaseData<T>;
   const prm = (permitsData || []) as T[];
 
   // -------------------------------------------------- funtions
