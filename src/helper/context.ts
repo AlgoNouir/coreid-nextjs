@@ -10,7 +10,9 @@ export type userBaseData<T extends string> = {
 export interface AuthContextValueType<T extends string> {
   authera_props: AuthHookSettings<T>;
   userData: userBaseData<T>;
-  setUserData: (value: userBaseData<T>) => void;
+  set: (key: keyof AuthContextValueType<T>, value: any) => void;
+  access_token?: string | null;
+  refresh_token?: string | null;
 }
 
 export const AuthContext = React.createContext<

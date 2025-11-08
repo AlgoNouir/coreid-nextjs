@@ -27,7 +27,7 @@ export default function LoginForm({
   const [userID, userIDHandler] = useState("");
   const [stepPayload, stepPayloadHandler] = useState<any>({});
   const { handleSubmit, control } = useForm();
-  const { backendUrl, setUserData } = useAuth();
+  const { backendUrl, setUserData, setPermits } = useAuth();
 
   const request = axios.create({
     baseURL: backendUrl,
@@ -65,7 +65,8 @@ export default function LoginForm({
     }
     // if response say authenticate is finished
     else if (response.status === 200) {
-      setUserData(response.data);
+      setUserData(response.data.user);
+      setPermits(response.data.user.permits);
       if (on_after_login) on_after_login();
     }
     // if response say have a wrong in this request

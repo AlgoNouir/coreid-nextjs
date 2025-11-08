@@ -1,4 +1,3 @@
-import { AuthHookSettings } from "..";
 import {
   AuthContext,
   userBaseData,
@@ -19,6 +18,8 @@ export function useAuth<T extends string>() {
   const { permits: permitsData, ...user } = ctx.userData;
   const prm = (permitsData || []) as T[];
 
+  console.log("userData", ctx.userData);
+
   // -------------------------------------------------- funtions
   const isPermitted = (perm: T) => {
     return prm.includes(perm);
@@ -32,28 +33,43 @@ export function useAuth<T extends string>() {
     else if (fallback) fallback();
   };
 
+  const setUserData = (userData: userBaseData<T>) => {
+    ctx.set("userData", userData);
+  };
+
   const setPermits = (permits: T[]) => {
-    ctx.setUserData({ ...ctx.userData, permits });
+    ctx.set("userData", { ...ctx.userData, permits });
   };
 
   const addPermits = (permits: T[]) => {
     if (typeof permits !== "object") return;
 
-    ctx.setUserData({
+    ctx.set("userData", {
       ...ctx.userData,
       permits: [...prm.filter((p) => !permits.includes(p)), ...permits],
     });
   };
 
   const removePermits = (permits: T[]) => {
-    ctx.setUserData({
+    ctx.set("userData", {
       ...ctx.userData,
       permits: prm.filter((p) => !permits.includes(p)),
     });
   };
 
-  const setUserData = (userData: userBaseData<T>) => {
-    ctx.setUserData(userData);
+  const setAccessToken = (token: string) => {
+    ctx.set("access_token", token);
+  };
+
+  const setRefreshToken = (token: string) => {
+    ctx.set("refresh_token", token);
+  };
+
+  const logout = () => {
+    setUserData(null as any);
+    setPermits([]);
+    ctx.set("refresh_token", null);
+    ctx.set("access_token", null);
   };
 
   return {
@@ -66,6 +82,9 @@ export function useAuth<T extends string>() {
     setUserData,
     isPermittedAll,
     user,
+    setAccessToken,
+    setRefreshToken,
+    logout,
     ...ctx.authera_props,
   };
 }
