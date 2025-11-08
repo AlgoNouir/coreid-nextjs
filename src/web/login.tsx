@@ -36,7 +36,7 @@ export default function LoginForm({
   // fetch data from steps
   useEffect(() => {
     async function fetchSteps() {
-      const response = await request.get("options");
+      const response = await request.get("options/");
       const data = Object.entries(response.data).map(([opt, schema]) => ({
         name: opt,
         structure: convertFromSchema(schema),
@@ -48,35 +48,35 @@ export default function LoginForm({
     fetchSteps();
   }, []);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
     // valudate step and send data to server
-    const response = await request.post("validate/" + activeStep!.name, {
-      options: data,
-      payload: stepPayload,
-      user_id: userID,
-    });
-
-    // if response say go next step
-    if (response.status === 202) {
-      const nextIndex =
-        (steps?.findIndex((d) => d.name === activeStep?.name) || 0) + 1;
-      activeStepHandler(steps?.[nextIndex]);
-      if (on_after_step) on_after_step(steps?.[nextIndex]?.name || "");
-    }
-    // if response say authenticate is finished
-    else if (response.status === 200) {
-      console.log("user logined with", response.data.user);
-
-      setUserData(response.data.user);
-      setPermits(response.data.user.permits);
-      if (on_after_login) on_after_login(response.data);
-    }
-    // if response say have a wrong in this request
-    else if (response.status === 400) {
-      activeStepHandler(steps?.[0]);
-    }
-    userIDHandler(response.data.user_id);
-    stepPayloadHandler(response.data.payload);
+    request
+      .post("validate/" + activeStep!.name, {
+        options: data,
+        payload: stepPayload,
+        user_id: userID,
+      })
+      .then((response) => {
+        // if response say go next step
+        if (response.status === 202) {
+          const nextIndex =
+            (steps?.findIndex((d) => d.name === activeStep?.name) || 0) + 1;
+          activeStepHandler(steps?.[nextIndex]);
+          if (on_after_step) on_after_step(steps?.[nextIndex]?.name || "");
+        }
+        // if response say authenticate is finished
+        else if (response.status === 200) {
+          setUserData(response.data.user);
+          setPermits(response.data.user.permits);
+          if (on_after_login) on_after_login(response.data);
+        }
+        // if response say have a wrong in this request
+        else if (response.status === 400) {
+          activeStepHandler(steps?.[0]);
+        }
+        userIDHandler(response.data.user_id);
+        stepPayloadHandler(response.data.payload);
+      });
   };
 
   // loading check
