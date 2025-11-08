@@ -11,7 +11,8 @@ export interface AuthHookSettings<T extends string> {
   tokenType: "jwt";
   refreshStrategy: "silent";
   fallback_401_url: string;
-  go_after_login_url: string;
+  on_after_login?: () => void;
+  on_after_step?: (step_key: string) => void;
 }
 
 export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
@@ -27,7 +28,12 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
       </AuthProvider>
     ),
     useAuth: () => useAuth<T>(),
-    LoginScenario: () => <LoginForm />,
+    LoginScenario: () => (
+      <LoginForm
+        on_after_login={props.on_after_login}
+        on_after_step={on_after_step}
+      />
+    ),
   };
 }
 

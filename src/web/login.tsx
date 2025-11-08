@@ -9,7 +9,16 @@ interface ScenarioStepsType {
   name: string;
   structure: structure;
 }
-export default function LoginForm() {
+
+interface LoginFormProps {
+  on_after_login?: () => void;
+  on_after_step?: (step_key: string) => void;
+}
+
+export default function LoginForm({
+  on_after_login,
+  on_after_step,
+}: LoginFormProps) {
   const [steps, stepsHnadler] = useState<ScenarioStepsType[]>();
   const [activeStep, activeStepHandler] = useState<
     ScenarioStepsType | undefined
@@ -18,7 +27,7 @@ export default function LoginForm() {
   const [userID, userIDHandler] = useState("");
   const [stepPayload, stepPayloadHandler] = useState<any>({});
   const { handleSubmit, control } = useForm();
-  const { go_after_login_url, backendUrl, setUserData } = useAuth();
+  const { backendUrl, setUserData } = useAuth();
 
   const request = axios.create({
     baseURL: backendUrl,
@@ -52,11 +61,12 @@ export default function LoginForm() {
       const nextIndex =
         (steps?.findIndex((d) => d.name === activeStep?.name) || 0) + 1;
       activeStepHandler(steps?.[nextIndex]);
+      if (on_after_step) on_after_step(steps?.[nextIndex]?.name || "");
     }
     // if response say authenticate is finished
     else if (response.status === 200) {
-      window.location.href = go_after_login_url;
       setUserData(response.data);
+      if (on_after_login) on_after_login();
     }
     // if response say have a wrong in this request
     else if (response.status === 400) {
