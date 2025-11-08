@@ -11,7 +11,7 @@ interface ScenarioStepsType {
 }
 
 interface LoginFormProps {
-  on_after_login?: () => void;
+  on_after_login?: (response_data: any) => void;
   on_after_step?: (step_key: string) => void;
 }
 
@@ -67,7 +67,7 @@ export default function LoginForm({
     else if (response.status === 200) {
       setUserData(response.data.user);
       setPermits(response.data.user.permits);
-      if (on_after_login) on_after_login();
+      if (on_after_login) on_after_login(response.data);
     }
     // if response say have a wrong in this request
     else if (response.status === 400) {

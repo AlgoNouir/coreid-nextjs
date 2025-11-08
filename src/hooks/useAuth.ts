@@ -18,8 +18,6 @@ export function useAuth<T extends string>() {
   const { permits: permitsData, ...user } = ctx.userData;
   const prm = (permitsData || []) as T[];
 
-  console.log("userData", ctx.userData);
-
   // -------------------------------------------------- funtions
   const isPermitted = (perm: T) => {
     return prm.includes(perm);
@@ -34,6 +32,7 @@ export function useAuth<T extends string>() {
   };
 
   const setUserData = (userData: userBaseData<T>) => {
+    console.log("userData", userData);
     ctx.set("userData", userData);
   };
 

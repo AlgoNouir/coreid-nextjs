@@ -11,7 +11,7 @@ export interface AuthHookSettings<T extends string> {
   tokenType: "jwt";
   refreshStrategy: "silent";
   fallback_401_url: string;
-  on_after_login?: () => void;
+  on_after_login?: (response_data: any) => void;
   on_after_step?: (step_key: string) => void;
 }
 
