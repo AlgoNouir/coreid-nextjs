@@ -14,8 +14,10 @@ export function name2storage(name: storagesNames) {
   };
 
   const local: customeFunc = {
-    get: (key) => JSON.parse(localStorage.getItem(key) || "{}"),
-    set: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
+    get: (key) =>
+      JSON.parse((globalThis as any).localStorage.getItem(key) || "{}"),
+    set: (key, value) =>
+      (globalThis as any).localStorage.setItem(key, JSON.stringify(value)),
   };
 
   const mapStorage: { [key in storagesNames]: customeFunc } = {
