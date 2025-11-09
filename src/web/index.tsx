@@ -24,39 +24,12 @@ export default function AuthProvider<T extends string>({
    * Context Provider
    */
   const Provider = AuthContext.Provider;
-  const [userData, setUserData] = React.useState<userBaseData<T> | null>(
-    storage.get("userData") as userBaseData<T> | null
-  );
-  const [accessToken, setAccessToken] = React.useState<string | null>(
-    (storage.get("access_token") as string | null) ?? null
-  );
-  const [refreshToken, setRefreshToken] = React.useState<string | null>(
-    (storage.get("refresh_token") as string | null) ?? null
-  );
-
-  const set = (key: keyof AuthContextValueType<T>, value: any) => {
-    if (key === "userData") setUserData(value as userBaseData<T> | null);
-    if (key === "access_token") setAccessToken(value as string | null);
-    if (key === "refresh_token") setRefreshToken(value as string | null);
-    storage.set(key as string, value);
+  const userData = storage.get("userData") as userBaseData<T>;
+  const set = (key: keyof AuthContextValueType<T>, value: userBaseData<T>) => {
+    storage.set(key, value);
   };
 
   return (
-    <Provider
-      value={{
-        userData: (userData ||
-          ({
-            id: "",
-            username: "",
-            permits: [],
-          } as userBaseData<T>)) as userBaseData<T>,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        set,
-        authera_props,
-      }}
-    >
-      {children}
-    </Provider>
+    <Provider value={{ userData, set, authera_props }}>{children}</Provider>
   );
 }

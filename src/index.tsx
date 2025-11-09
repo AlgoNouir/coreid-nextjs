@@ -23,6 +23,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
       <LoginForm
         on_after_login={props.on_after_login}
         on_after_step={props.on_after_step}
+        backendUrl={props.backendUrl}
       />
     ),
   };

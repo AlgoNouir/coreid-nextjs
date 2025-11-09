@@ -9,12 +9,12 @@ export type customeFunc = {
 };
 export function name2storage(name: storagesNames) {
   const cookie: customeFunc = {
-    get: (key) => JSON.parse(Cookie.get(key) ?? "null"),
+    get: (key) => JSON.parse(Cookie.get(key) || "{}"),
     set: (key, value) => Cookie.set(key, JSON.stringify(value)),
   };
 
   const local: customeFunc = {
-    get: (key) => JSON.parse(localStorage.getItem(key) ?? "null"),
+    get: (key) => JSON.parse(localStorage.getItem(key) || "{}"),
     set: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
   };
 

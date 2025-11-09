@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AuthContext,
   userBaseData,
@@ -15,8 +17,8 @@ export function useAuth<T extends string>() {
 
   // -------------------------------------------------- data
 
-  const { permits: permitsData = [], ...user } = (ctx.userData ||
-    ({} as userBaseData<T>)) as userBaseData<T>;
+  const { permits: permitsData, ...user } = ctx.userData;
+  const authera_props = ctx.authera_props;
   const prm = (permitsData || []) as T[];
 
   // -------------------------------------------------- funtions
@@ -85,6 +87,6 @@ export function useAuth<T extends string>() {
     setAccessToken,
     setRefreshToken,
     logout,
-    ...ctx.authera_props,
+    ...authera_props,
   };
 }

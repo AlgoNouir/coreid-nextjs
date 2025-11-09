@@ -1,8 +1,10 @@
+"use client";
+
 import axios from "axios";
 import { convertFromSchema, type structure } from "minimal-form";
 import EasyForm from "minimal-form";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth";
 
 interface ScenarioStepsType {
@@ -13,11 +15,13 @@ interface ScenarioStepsType {
 interface LoginFormProps {
   on_after_login?: (response_data: any) => void;
   on_after_step?: (step_key: string) => void;
+  backendUrl: string;
 }
 
 export default function LoginForm({
   on_after_login,
   on_after_step,
+  backendUrl,
 }: LoginFormProps) {
   const [steps, stepsHnadler] = useState<ScenarioStepsType[]>();
   const [activeStep, activeStepHandler] = useState<
@@ -27,7 +31,7 @@ export default function LoginForm({
   const [userID, userIDHandler] = useState("");
   const [stepPayload, stepPayloadHandler] = useState<any>({});
   const { handleSubmit, control } = useForm();
-  const { backendUrl, setUserData, setPermits } = useAuth();
+  const { setUserData, setPermits } = useAuth();
 
   const request = axios.create({
     baseURL: backendUrl,
@@ -48,35 +52,32 @@ export default function LoginForm({
     fetchSteps();
   }, []);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     // valudate step and send data to server
-    request
-      .post("validate/" + activeStep!.name, {
-        options: data,
-        payload: stepPayload,
-        user_id: userID,
-      })
-      .then((response) => {
-        // if response say go next step
-        if (response.status === 202) {
-          const nextIndex =
-            (steps?.findIndex((d) => d.name === activeStep?.name) || 0) + 1;
-          activeStepHandler(steps?.[nextIndex]);
-          if (on_after_step) on_after_step(steps?.[nextIndex]?.name || "");
-        }
-        // if response say authenticate is finished
-        else if (response.status === 200) {
-          setUserData(response.data.user);
-          setPermits(response.data.user.permits);
-          if (on_after_login) on_after_login(response.data);
-        }
-        // if response say have a wrong in this request
-        else if (response.status === 400) {
-          activeStepHandler(steps?.[0]);
-        }
-        userIDHandler(response.data.user_id);
-        stepPayloadHandler(response.data.payload);
-      });
+    const response = await request.post("validate/" + activeStep!.name, {
+      options: data,
+      payload: stepPayload,
+      user_id: userID,
+    });
+    // if response say go next step
+    if (response.status === 202) {
+      const nextIndex =
+        (steps?.findIndex((d) => d.name === activeStep?.name) || 0) + 1;
+      activeStepHandler(steps?.[nextIndex]);
+      if (on_after_step) on_after_step(steps?.[nextIndex]?.name || "");
+    }
+    // if response say authenticate is finished
+    else if (response.status === 200) {
+      setUserData(response.data.user);
+      setPermits(response.data.user.permits);
+      if (on_after_login) on_after_login(response.data);
+    }
+    // if response say have a wrong in this request
+    else if (response.status === 400) {
+      activeStepHandler(steps?.[0]);
+    }
+    userIDHandler(response.data.user_id);
+    stepPayloadHandler(response.data.payload);
   };
 
   // loading check
