@@ -1,11 +1,13 @@
 "use client";
 
 import axios from "axios";
-import { convertFromSchema, type structure } from "minimal-form";
-import EasyForm from "minimal-form";
+import { convertFromSchema } from "minimal-form";
+import { structure } from "minimal-form";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth";
+import EasyFormModule from "minimal-form";
+const EasyForm = (EasyFormModule as any).default || EasyFormModule;
 
 interface ScenarioStepsType {
   name: string;
@@ -16,12 +18,16 @@ interface LoginFormProps {
   on_after_login?: (response_data: any) => void;
   on_after_step?: (step_key: string) => void;
   backendUrl: string;
+  submitButtonClassName?: string;
+  submitButtonText?: string;
 }
 
 export default function LoginForm({
   on_after_login,
   on_after_step,
   backendUrl,
+  submitButtonClassName,
+  submitButtonText,
 }: LoginFormProps) {
   const [steps, stepsHnadler] = useState<ScenarioStepsType[]>();
   const [activeStep, activeStepHandler] = useState<
@@ -82,13 +88,14 @@ export default function LoginForm({
 
   // loading check
   if (loading) return <p>loading ...</p>;
-  console.log("activeStep", activeStep?.structure);
 
   // show forms from steps
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <EasyForm control={control} structure={activeStep?.structure || {}} />
-      <button type="submit">Submit</button>
+      <button type="submit" className={submitButtonClassName}>
+        {submitButtonText}
+      </button>
     </form>
   );
 }

@@ -19,11 +19,16 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
       </AuthProvider>
     ),
     useAuth: () => useAuth<T>(),
-    LoginScenario: () => (
+    LoginScenario: (prop: {
+      submitButtonClassName?: string;
+      submitButtonText?: string;
+    }) => (
       <LoginForm
         on_after_login={props.on_after_login}
         on_after_step={props.on_after_step}
         backendUrl={props.backendUrl}
+        submitButtonClassName={prop.submitButtonClassName}
+        submitButtonText={prop.submitButtonText}
       />
     ),
   };
