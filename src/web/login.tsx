@@ -86,7 +86,7 @@ export default function LoginForm({
   // show forms from steps
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <EasyForm control={control} structure={activeStep!.structure} />
+      <EasyForm control={control} structure={activeStep?.structure || {}} />
       <button type="submit">Submit</button>
     </form>
   );
