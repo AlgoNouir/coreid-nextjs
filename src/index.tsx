@@ -19,7 +19,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
       </AuthProvider>
     ),
     useAuth: () => useAuth<T>(),
-    LoginScenario: (
+    LoginScenario: () => (
       <LoginForm
         on_after_login={props.on_after_login}
         on_after_step={props.on_after_step}
