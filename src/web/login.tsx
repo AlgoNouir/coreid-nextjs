@@ -82,6 +82,7 @@ export default function LoginForm({
 
   // loading check
   if (loading) return <p>loading ...</p>;
+  console.log("activeStep", activeStep?.structure);
 
   // show forms from steps
   return (
