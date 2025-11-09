@@ -1,6 +1,6 @@
 {
   "name": "authera",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "this project is a simple auth hook for react",
   "type": "module",
   "main": "dist/index.js",
