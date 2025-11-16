@@ -40,7 +40,7 @@ export default function LoginForm({
   const { setUserData, setPermits } = useAuth();
 
   const request = axios.create({
-    baseURL: backendUrl,
+    baseURL: backendUrl + "/auth",
   });
 
   // fetch data from steps

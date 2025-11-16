@@ -5,6 +5,7 @@ import AuthProvider from "./web";
 import { useAuth } from "./hooks/useAuth";
 import LoginForm from "./web/login";
 import { type AuthHookSettings } from "./helper/types";
+import createAxios from "./helper/axios";
 
 export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
   // set storage functions
@@ -12,6 +13,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
   if (typeof storage === "string") storage = name2storage(storage);
 
   // create backend data
+  const axios = createAxios<T>(storage as customeFunc, props);
   return {
     createAuthProvider: (children: React.ReactNode): React.ReactNode => (
       <AuthProvider<T> storage={storage} authera_props={props}>
@@ -19,6 +21,7 @@ export default function AuthHook<T extends string>(props: AuthHookSettings<T>) {
       </AuthProvider>
     ),
     useAuth: () => useAuth<T>(),
+    axios,
     LoginScenario: (prop: {
       submitButtonClassName?: string;
       submitButtonText?: string;
