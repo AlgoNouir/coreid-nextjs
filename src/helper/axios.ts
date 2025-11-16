@@ -25,8 +25,8 @@ export default function createAxios<T extends string>(
   // Single-flight refresh across concurrent 401s
   let refreshPromise: Promise<string | null> | null = null;
 
-  const accessToken = storage.get("access_token").replaceAll('"', "");
-  const refreshToken = storage.get("refresh_token").replaceAll('"', "");
+  const accessToken = storage.get("access_token");
+  const refreshToken = storage.get("refresh_token");
 
   const writeTokens = (access?: string | null, refresh?: string | null) => {
     if (access) storage.set("access_token", access);
