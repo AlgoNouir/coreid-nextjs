@@ -26,12 +26,8 @@ export default function createAxios<T extends string>(
   let refreshPromise: Promise<string | null> | null = null;
 
   const readAccessToken = (): string | null => {
-    try {
-      const token = storage.get("access_token");
-      return token || null;
-    } catch {
-      return null;
-    }
+    const token = storage.get("access_token");
+    return token!;
   };
 
   const readRefreshToken = (): string | null => {
@@ -85,7 +81,6 @@ export default function createAxios<T extends string>(
   // Attach Authorization header on each request
   instance.interceptors.request.use((config: any) => {
     const access = readAccessToken();
-    console.log("access", access);
     if (access) {
       config.headers = {
         ...config.headers,
