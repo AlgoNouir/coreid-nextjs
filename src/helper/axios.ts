@@ -85,6 +85,7 @@ export default function createAxios<T extends string>(
   // Attach Authorization header on each request
   instance.interceptors.request.use((config: any) => {
     const access = readAccessToken();
+    console.log("access", access);
     if (access) {
       config.headers = {
         ...config.headers,
