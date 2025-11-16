@@ -18,6 +18,8 @@ export function useAuth<T extends string>() {
   // -------------------------------------------------- data
 
   const { permits: permitsData, ...user } = ctx.userData;
+  const access_token = ctx.access_token;
+  const refresh_token = ctx.refresh_token;
   const authera_props = ctx.authera_props;
   const prm = (permitsData || []) as T[];
 
@@ -86,6 +88,8 @@ export function useAuth<T extends string>() {
     setAccessToken,
     setRefreshToken,
     logout,
+    access_token,
+    refresh_token,
     ...authera_props,
   };
 }

@@ -7,6 +7,7 @@ import axios, {
 } from "axios";
 import type { customeFunc } from "./storage";
 import type { AuthHookSettings } from "./types";
+import { useAuth } from "../hooks/useAuth";
 
 type RetriableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
@@ -20,6 +21,9 @@ export default function createAxios<T extends string>(
   storage: customeFunc,
   settings: AuthHookSettings<T>
 ): AxiosInstance {
+  const { setAccessToken, setRefreshToken, access_token, refresh_token } =
+    useAuth();
+
   const instance = axios.create({
     baseURL: settings.backendUrl,
   });
@@ -27,27 +31,9 @@ export default function createAxios<T extends string>(
   // Single-flight refresh across concurrent 401s
   let refreshPromise: Promise<string | null> | null = null;
 
-  const readAccessToken = (): string | null => {
-    try {
-      const token = storage.get("access_token");
-      return token || null;
-    } catch {
-      return null;
-    }
-  };
-
-  const readRefreshToken = (): string | null => {
-    try {
-      const token = storage.get("refresh_token");
-      return token || null;
-    } catch {
-      return null;
-    }
-  };
-
   const writeTokens = (access?: string | null, refresh?: string | null) => {
-    if (access) storage.set("access_token", access);
-    if (refresh) storage.set("refresh_token", refresh);
+    if (access) setAccessToken(access);
+    if (refresh) setRefreshToken(refresh);
   };
 
   const resolveAccessFromResponse = (data: any): string | null => {
@@ -59,7 +45,7 @@ export default function createAxios<T extends string>(
   };
 
   const doRefresh = async (): Promise<string | null> => {
-    const token = readRefreshToken();
+    const token = refresh_token;
     if (!token) return null;
     try {
       // Use a bare client to avoid interceptor recursion
@@ -86,11 +72,10 @@ export default function createAxios<T extends string>(
 
   // Attach Authorization header on each request
   instance.interceptors.request.use((config: any) => {
-    const access = readAccessToken();
-    if (access) {
+    if (access_token) {
       config.headers = {
         ...config.headers,
-        Authorization: `Bearer ${access}`,
+        Authorization: `Bearer ${access_token}`,
       };
     }
     return config;
