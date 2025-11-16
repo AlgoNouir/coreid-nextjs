@@ -25,19 +25,8 @@ export default function createAxios<T extends string>(
   // Single-flight refresh across concurrent 401s
   let refreshPromise: Promise<string | null> | null = null;
 
-  const readAccessToken = (): string | null => {
-    const token = storage.get("access_token");
-    return token!;
-  };
-
-  const readRefreshToken = (): string | null => {
-    try {
-      const token = storage.get("refresh_token");
-      return token || null;
-    } catch {
-      return null;
-    }
-  };
+  const accessToken = storage.get("access_token").replaceAll('"', "");
+  const refreshToken = storage.get("refresh_token").replaceAll('"', "");
 
   const writeTokens = (access?: string | null, refresh?: string | null) => {
     if (access) storage.set("access_token", access);
@@ -53,12 +42,12 @@ export default function createAxios<T extends string>(
   };
 
   const doRefresh = async (): Promise<string | null> => {
-    const token = readRefreshToken();
-    if (!token) return null;
     try {
       // Use a bare client to avoid interceptor recursion
       const client = axios.create({ baseURL: settings.backendUrl });
-      const resp = await client.post("refresh/", { refresh_token: token });
+      const resp = await client.post("refresh/", {
+        refresh_token: refreshToken,
+      });
       const newAccess = resolveAccessFromResponse(resp.data);
       const newRefresh = resolveRefreshFromResponse(resp.data);
       writeTokens(newAccess, newRefresh);
@@ -80,13 +69,10 @@ export default function createAxios<T extends string>(
 
   // Attach Authorization header on each request
   instance.interceptors.request.use((config: any) => {
-    const access = readAccessToken();
-    if (access) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${access}`,
-      };
-    }
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
     return config;
   });
 
